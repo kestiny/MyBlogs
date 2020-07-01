@@ -1,9 +1,17 @@
+encoding: utf-8
+
 title: kestiny的博客
 subtitle: Walk steps step by step
 description: 为人生更自由
-copyright: © 2020 - 2020 kestiny All Rights Reserved
+footerText: '© 2020 - 2020 kestiny All Rights Reserved'
 author: kestiny
 email: yingking1018@163.com
-language: zh-CN
 
 theme: jekyll-theme-cayman
+
+# 菜单
+menu:
+  - title: 首页
+    url: /
+  - title: 关于
+    url: /pages/about.html
