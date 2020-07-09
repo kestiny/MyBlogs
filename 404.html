@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>打砖块小游戏</title>
+
+    <style type="text/css">
+        #ball {
+            width: 15px;
+            height: 15px;
+            background: red;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            box-shadow: 0 0 4px 4px blue;
+        }
+
+        #brick {
+            width: 90%;
+            height: 50%;
+            position: relative;
+            top: 100;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+
+        #brick div {
+            width: 45px;
+            height: 15px;
+            border: 1px solid yellow;
+            position: absolute;
+            background-color: rgb(255, 0, 150);
+            top: 0;
+            left: 0;
+            transform-origin: top center;
+        }
+        #ward {
+            width: 120px;
+            height: 30px;
+            z-index: 999;
+            border-radius: 9px;
+            position: absolute;
+            left: 0px;
+            background-color: rgb(255, 146, 32);
+        }
+
+        #gameOver {
+            display: none;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            width: 300px;
+            height: 200px;
+            background-color: rgb(213, 213,213);
+            box-shadow: 0 0 4px #222222;
+            text-align: center;
+        }
+
+        #gameOver p {
+            margin-top: 50px; 
+            margin-bottom: 50px;
+            font: 20px blod;
+        }
+
+        #gameOver button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <p>404 页面暂时丢失了，请尊驾移步 <a href="./index.md">首页</a></p>
+    </div>
+    <div id="brick"></div>
+    <div id="ball"></div>
+    <div id="ward"></div>
+    <div id="socre">0分</div>
+    <div id="gameOver">
+        <p>总分:88</p>
+        <button type="button" onclick="game.reload()">重玩</button>
+    </div>
+
+<script type="text/javascript">
+    class Game{
+        // 构造函数
+        constructor() {
+            this.ball = document.querySelector("#ball"); // 球
+            this.ward = document.getElementById("ward"); // 挡板
+            this.socres = document.getElementById("socre"); // 计分板
+            this.bricks = document.getElementById("brick"); // 砖块区
+            this.over = document.getElementById("gameOver"); // 游戏结束
+            this.x = 0;
+            this.y = 0;
+            this.score = 0;
+        }
+
+        start() {
+            // 初始化
+            this.ballStart();
+            this.createBricks();
+            this.wardMove();
+        }
+
+        createBricks() {
+            // 创建砖块
+            let x = document.documentElement.offsetWidth * 0.05;
+            let w = 45 * 2;
+            let h = 15 * 2;
+
+            for (let i = 1; i <= 8; i++) {  //循环生成div 8层  
+                for (let j = 0; j < 15; j++) {
+                    let brick = document.createElement("div");  
+                    brick.style.top = (i - 1) * h + 100 + 'px';  
+                    brick.style.left = x + (j * w) + 'px';  
+                    this.bricks.appendChild(brick);  
+                }
+            }
+        }
+
+        wardMove(){
+            // 初始化挡板
+            let _this = this;
+            this.ward.style.top = window.innerHeight - 80 + 'px';
+            this.ward.style.left = this.x - 60 + 'px';
+            document.addEventListener('mousemove', this.mouseMove.bind(this), false);//监听鼠标位置变化
+            document.addEventListener('touchmove', function(event){
+                debugger;
+                _this.mouseMove(event);
+            });
+        }
+
+        ballStart() {
+            // 初始化小球
+            let _this = this;
+            this.y = window.innerHeight - 100;
+            this.x = window.innerWidth / 2;
+            this.ball.style.top = this.y + 'px';
+            this.ball.style.left = this.x + 'px';
+            this.ball.speed = 10;
+            this.ball.width = 15;
+            this.ball.height = 15;
+            document.onclick = function(){
+                _this.ballMove();
+            }
+        }
+
+        mouseMove(e) {
+            // 挡板跟随鼠标移动
+            e = e || window.event;
+            let pos = e.pageX - this.ward.offsetWidth / 2;
+            pos = Math.min(window.innerWidth - this.ward.offsetWidth, pos);
+            pos = Math.max(0, pos);
+            this.ward.style.left = pos + 'px';
+        }
+
+        ballMove() {
+            // 小球轨迹
+            document.onClick = null;
+            this.ball.xspeed = this.ball.speed;
+            this.ball.yspeed = -this.ball.speed;
+            function auto() {
+                this.x += this.ball.xspeed;
+                this.y += this.ball.yspeed;
+                this.collision();
+                this.ball.style.left = this.x + 'px';
+                this.ball.style.top = this.y + 'px';
+                requestAnimationFrame(auto.bind(this));
+            }
+
+            auto.call(this);
+        }
+
+        collision() {
+            // 碰撞
+            let maxWidth = window.innerWidth - this.ball.offsetWidth;
+            let maxHeight = window.innerHeight - this.ball.offsetHeight;
+
+            if (this.y >= maxHeight) {
+                this.gameOver();
+            }
+
+            if (this.x >= maxWidth) {
+                this.ball.xspeed *= -1;
+                this.x = maxWidth;
+            }
+
+            if (this.x < 0) {
+                this.ball.xspeed = this.ball.speed;
+                this.x = 0;
+            }
+
+            if (this.y < 0) {
+                this.ball.yspeed = this.ball.speed;
+                this.y = 0;
+            }
+
+            if (Math.abs(this.x - (this.ward.offsetLeft + (this.ward.clientWidth / 2))) < 60 && Math.abs(this.y - this.ward.offsetTop - 30) < 45) {
+                this.ball.yspeed *= -1;
+                this.y = this.ward.offsetTop - 40;
+            }
+
+            for (let i = this.bricks.children.length - 1; i >= 0; i--) {
+                let ballMx = this.ball.offsetLeft + this.ball.width / 2;
+                let ballMy = this.ball.offsetTop + this.ball.height / 2;
+                let brickMx = this.bricks.children[i].offsetLeft + this.bricks.offsetLeft + 45 /2;
+                let brickMy = this.bricks.children[i].offsetTop + this.bricks.offsetTop + 15/ 2;
+                if (Math.abs(ballMx - brickMx) <= 45 && Math.abs(ballMy - brickMy) <= 15) {
+                    this.ball.yspeed *= -1;
+                    this.y = brickMy;
+                    this.bricks.removeChild(this.bricks.children[i]);
+                    if (this.bricks.children.length == 0) {
+                        this.gameOver();
+                    }
+                    this.socreChange();
+                }
+            }
+        }
+
+        socreChange() {
+            // 积分记录
+            this.score++;
+            this.socres.innerHTML = this.score + '分';
+        }
+
+        gameOver() {
+            // 游戏结束
+            this.over.style.display = 'block';
+            this.over.children[0].innerHTML = '总分：' + this.score;
+            this.ward.style.display = 'none';
+            this.ball.style.display = 'none';
+        }
+
+        reload(){
+            location.reload();
+        }
+    }
+
+    var game = new Game();
+    game.start();
+
+</script>
+</body>
+</html>
