@@ -15,5 +15,8 @@
 
 &emsp;&emsp;[03-MyBatis动态SQL](./Javas/03-MyBatis动态SQL.md)
 
+&emsp;&emsp;[04-MyBatis缓存](./Javas/04-MyBatis缓存.md)
+
+&emsp;&emsp;[前端跨域的原则](./Javas/前端跨域的原则.md)
 ## 404页面与小游戏
 &emsp;&emsp;写404页面，突然想来个别致一些的，不知怎么就想到写个小游戏，于是就写了一个纯HTML的小游戏：[打砖块](./小游戏.md)，第一次写HTML的东西，非常的简陋[欢迎试玩](./game.md)，[源码地址](https://github.com/kestiny/kestiny.github.io/blob/master/404.html)。
