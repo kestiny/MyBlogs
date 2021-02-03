@@ -1,4 +1,4 @@
-# 1. MySQL基础架构图
+# 1 MySQL基础架构图
 ![MySQL基础架构图](../images/mysql逻辑架构.png)
 MySQL的逻辑架构可分为两个层：Server层和存储引擎层。
 
@@ -53,5 +53,3 @@ MySQL的Server层包括：链接器、缓存、分析器、优化器、执行器
 
 ## 1.2 存储引擎层
 存储引擎层负责数据的存储和提取，MySQL采用了插件式的架构模式。常用的存储引擎插件有InnoDB，Memory，MyISAM等，自从MySQL5.5.5以来，默认使用InnoDB作为基础存储引擎。
-
-# 2 数据库索引
